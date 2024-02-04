@@ -26,6 +26,7 @@ final class App
             echo "Usage: composer run-script start edit_charity <id_number> <name> <email>\n";
             echo "Usage: composer run-script start delete_charity <id_number>\n";
             echo "Usage: composer run-script start add_donation <donor_name> <amount> <charity_id>\n";
+            echo "Usage: composer run-script start export_data\n";
             exit(1);
         }
 
@@ -52,6 +53,10 @@ final class App
 
         if ($argc == 5 && $argv[1] == 'add_donation') {
             DonationsController::Create($filename, $argv[2], $argv[3], $argv[4]);
+        }
+
+        if ($argc == 2 && $argv[1] == 'export_data') {
+            CharityController::WriteToCsv($filename);
         }
     }
 }
