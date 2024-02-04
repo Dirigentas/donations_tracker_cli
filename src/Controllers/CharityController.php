@@ -1,13 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Aras\DonationsTrackerCli\Controllers;
 
 use Aras\DonationsTrackerCli\DB\FileReader;
+use Aras\DonationsTrackerCli\Validation;
 
 final class CharityController
 {
     public static function Create($filename, $name, $email)
     {
+        if (!Validation::EmailValidation($email)) {
+            echo "Incorrect email format.\n";
+            exit(1);
+        }
+
         $newRecord = ['name' => $name, 'email' => $email, 'donations' => ''];
 
         FileReader::Create($filename, $newRecord);
