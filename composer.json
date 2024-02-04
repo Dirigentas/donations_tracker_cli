@@ -1,0 +1,12 @@
+{
+    "name": "aras/donations_tracker_cli",
+    "autoload": {
+        "psr-4": {
+            "Aras\\DonationsTrackerCli\\": "src/"
+        }
+    },
+    "require": {},
+    "scripts": {
+        "start": "php public/index.php"
+    }
+}
