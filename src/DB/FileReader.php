@@ -9,8 +9,9 @@
  namespace Aras\DonationsTrackerCli\DB;
  
 final class FileReader
-{ 
-    private static function GetId($filename) : int
+{   
+    // ID
+    public static function GetId($filename) : int
     {
         if (!file_exists($filename.'_id')) {
             file_put_contents($filename .'_id', json_encode(1));
@@ -24,7 +25,7 @@ final class FileReader
         }
     }
 
-    // Function to read data from a file
+    // Read
     public static function ReadDataFromFile($filename)
     {
         if (!file_exists($filename . '.json')) {
@@ -37,7 +38,7 @@ final class FileReader
         }
     }
 
-    // Function to write data to a file
+    // Write
     public static function WriteDataToFile($filename, $data)
     {
             $jsonData = json_encode($data);
@@ -45,34 +46,40 @@ final class FileReader
 
     }
 
-    // Function to create a new record
-    public static function Create($filename, $name, $email)
+    // Create
+    public static function Create($filename, $newRecord)
     {
         $data = self::ReadDataFromFile($filename);
-
-        $newRecord = ['name' => $name, 'email' => $email];
 
         $data['id: ' . self::GetId($filename)] = $newRecord;
         
         self::WriteDataToFile($filename, $data);
     }
 
-    // Function to update a record
-    public static function Update($filename, $id, $name, $email)
+    // Update
+    public static function Update($filename, $id, $newRecord)
     {
         $data = self::ReadDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
-            $data['id: ' . $id] = ['name' => $name, 'email' => $email];
+            $data['id: ' . $id] = $newRecord;
             self::WriteDataToFile($filename, $data);
         }
     }
 
-    // Function to delete a record
+    // Partial Update
+    public static function PartialUpdate($filename, $id, $newRecord, $updatedField, $updatedFieldId)
+    {
+        $data = self::ReadDataFromFile($filename);
+        if (isset($data['id: ' . $id])) {
+            $data['id: ' . $id][$updatedField][$updatedFieldId] = $newRecord;
+            self::WriteDataToFile($filename, $data);
+        }
+    }
+
+    // Delete
     public static function Delete($filename, $id)
     {
         $data = self::ReadDataFromFile($filename);
-        // print_r($data);
-        // die;
         if (isset($data['id: ' . $id])) {
             unset($data['id: ' . $id]);
             self::WriteDataToFile($filename, $data);
