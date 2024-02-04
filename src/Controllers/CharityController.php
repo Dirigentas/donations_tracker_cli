@@ -9,19 +9,36 @@ use Aras\DonationsTrackerCli\Validation;
 
 final class CharityController
 {
-    public static function Create($filename, $name, $email)
+    /**
+     * Create a new charity record.
+     *
+     * @param string $filename The name of the file to store the data
+     * @param string $name The name of the charity
+     * @param string $email The email address of the charity representative
+     * @return void
+     */
+    public static function Create(string $filename, string $name, string $email): void
     {
         if (!Validation::EmailValidation($email)) {
             echo "Incorrect email format.\n";
             exit(1);
         }
 
-        $newRecord = ['name' => $name, 'email' => $email, 'donations' => ''];
+        $newRecord = ['name' => $name, 'email' => $email];
 
         FileReader::Create($filename, $newRecord);
     }
 
-    public static function Update($filename, $id, $name, $email)
+    /**
+     * Update an existing charity record.
+     *
+     * @param string $filename The name of the file containing the data
+     * @param string $id The ID of the charity to update
+     * @param string $name The new name for the charity
+     * @param string $email The new email address for the charity representative
+     * @return void
+     */
+    public static function Update(string $filename, string $id, string $name, string $email): void
     {
         $newRecord = ['name' => $name, 'email' => $email];
 
@@ -29,10 +46,9 @@ final class CharityController
     }
     
     /**
-     * This method writes the provided data to a CSV file with the specified filename format.
+     * Write charity data to a CSV file.
      *
-     * @param array $formattedSearchCriteria An array containing parameters for requesting flight data.
-     * @param array $csvDataArray An array containing the data to be written to the CSV file.
+     * @param string $filename The name of the file containing the charity data
      * @return void
      */
     public static function WriteToCsv(string $filename): void

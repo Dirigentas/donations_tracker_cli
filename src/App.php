@@ -1,7 +1,9 @@
 <?php
 
 /**
+ * Class App
  * 
+ * Main application class responsible for routing CLI commands.
  */
 
  declare(strict_types=1);
@@ -15,11 +17,17 @@
 
 final class App
 {
+    /**
+     * Router function to handle CLI commands.
+     * 
+     * @param int $argc The number of arguments passed to the script
+     * @param array $argv An array of the arguments passed to the script
+     * @return void
+     */
     public static function Router(int $argc, array $argv): void
     {      
         $filename = './src/DB/charities';
 
-        // Check if command-line arguments are provided
         if ($argc < 2) {
             echo "Usage: composer run-script start view_charities\n";
             echo "Usage: composer run-script start add_charity <name> <email>\n";
@@ -34,9 +42,7 @@ final class App
             print_r(FileReader::ReadDataFromFile($filename));
         }
 
-
         if ($argc == 4 && $argv[1] == 'add_charity') {
-            // Validate input (e.g., ensure age is a positive integer)
 
             CharityController::Create($filename, $argv[2], $argv[3]);
 

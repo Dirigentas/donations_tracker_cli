@@ -7,7 +7,6 @@
 ## `Start` the solution
 
 -   have `PHP` and `composer` installed in your system
-<!-- -   choose desired flights destinations and dates in [SearchCriteria.json](./public/SearchCriteria.json) and `save` the file -->
 -   run below terminal commands:
     -   composer install
     -   composer run-script start
@@ -20,7 +19,7 @@
 -   no libraries
 -   an easy way to start the solution
 -   short documentation in the code itself
-<!-- -   solution outputs data to CSV file -->
+-   solution outputs data to JSON and optionaly to CSV file
 
 ## 😃 Author
 
