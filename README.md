@@ -2,7 +2,7 @@
 
 ## 🌟 About
 
-- [Homework](Homework.pdf)
+- [Homework](Homework.md)
 
 ## `Start` the solution
 
