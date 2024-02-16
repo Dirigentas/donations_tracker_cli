@@ -10,7 +10,7 @@
 
  namespace Aras\DonationsTrackerCli;
 
- use Aras\DonationsTrackerCli\DB\FileReader;
+ use Aras\DonationsTrackerCli\db\JsonReader;
  use Aras\DonationsTrackerCli\Controllers\CharityController;
  use Aras\DonationsTrackerCli\Controllers\DonationsController;
 
@@ -26,7 +26,7 @@ final class App
      */
     public static function router(int $argc, array $argv): void
     {      
-        $filename = './src/DB/charities';
+        $filename = './src/db/charities';
 
         if ($argc < 2) {
             echo "Usage: composer run-script start view_charities" . PHP_EOL;
@@ -39,7 +39,7 @@ final class App
         }
 
         if ($argc == 2 && $argv[1] == 'view_charities') {
-            print_r(FileReader::readDataFromFile($filename));
+            print_r(JsonReader::readDataFromFile($filename));
         }
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
@@ -54,7 +54,7 @@ final class App
         }
 
         if ($argc == 3 && $argv[1] == 'delete_charity') {
-            FileReader::delete($filename, $argv[2]);
+            JsonReader::delete($filename, $argv[2]);
         }
 
         if ($argc == 5 && $argv[1] == 'add_donation') {

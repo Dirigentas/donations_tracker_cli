@@ -2,7 +2,7 @@
 
 namespace Aras\DonationsTrackerCli\Controllers;
 
-use Aras\DonationsTrackerCli\DB\FileReader;
+use Aras\DonationsTrackerCli\db\JsonReader;
 use Aras\DonationsTrackerCli\Validation;
 
 final class DonationsController
@@ -25,6 +25,6 @@ final class DonationsController
 
         $donation = ['donor_name' => $donorName, 'amount' => $amount, 'date' => date(date('Y-m-d H:i'))];
 
-        FileReader::partialUpdate($filename, $charityid, $donation, 'donations', 'id: ' . FileReader::getId('./src/DB/donations'));
+        JsonReader::partialUpdate($filename, $charityid, $donation, 'donations', 'id: ' . JsonReader::getId('./src/DB/donations'));
     }
 }

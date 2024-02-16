@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Class FileReader
+ * Class JsonReader
  * 
  * Provides methods for reading from and writing to files.
  */
 
  declare(strict_types=1);
 
- namespace Aras\DonationsTrackerCli\DB;
+ namespace Aras\DonationsTrackerCli\db;
  
-final class FileReader
+final class JsonReader
 {   
     /**
      * Get the ID for a new record.

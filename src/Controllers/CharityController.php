@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aras\DonationsTrackerCli\Controllers;
 
-use Aras\DonationsTrackerCli\DB\FileReader;
+use Aras\DonationsTrackerCli\db\JsonReader;
 use Aras\DonationsTrackerCli\Validation;
 
 final class CharityController
@@ -26,7 +26,7 @@ final class CharityController
 
         $newRecord = ['name' => $name, 'email' => $email];
 
-        FileReader::create($filename, $newRecord);
+        JsonReader::create($filename, $newRecord);
     }
 
     /**
@@ -42,7 +42,7 @@ final class CharityController
     {
         $newRecord = ['name' => $name, 'email' => $email];
 
-        FileReader::update($filename, $id, $newRecord);
+        JsonReader::update($filename, $id, $newRecord);
     }
     
     /**
@@ -61,7 +61,7 @@ final class CharityController
             "representative_email"
         ]);
 
-        foreach (FileReader::readDataFromFile($filename) as $key => $row) {
+        foreach (JsonReader::readDataFromFile($filename) as $key => $row) {
             $key = substr($key, 4);
             array_pop($row);
             array_unshift($row, $key);
