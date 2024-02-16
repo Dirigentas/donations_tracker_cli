@@ -12,7 +12,7 @@ final class Validation
      * @param string $email The email address to validate
      * @return string|bool The validated email address if valid, otherwise false
      */
-    public static function EmailValidation(string $email): string|bool
+    public static function emailValidation(string $email): string|bool
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
@@ -23,7 +23,7 @@ final class Validation
      * @param string $amount The donation amount to validate
      * @return bool True if the amount is numeric, otherwise false
      */
-    public static function DonationAmount(string $amount): bool
+    public static function donationAmount(string $amount): bool
     {
         return is_numeric($amount);
     }

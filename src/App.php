@@ -24,45 +24,45 @@ final class App
      * @param array $argv An array of the arguments passed to the script
      * @return void
      */
-    public static function Router(int $argc, array $argv): void
+    public static function router(int $argc, array $argv): void
     {      
         $filename = './src/DB/charities';
 
         if ($argc < 2) {
-            echo "Usage: composer run-script start view_charities\n";
-            echo "Usage: composer run-script start add_charity <name> <email>\n";
-            echo "Usage: composer run-script start edit_charity <id_number> <name> <email>\n";
-            echo "Usage: composer run-script start delete_charity <id_number>\n";
-            echo "Usage: composer run-script start add_donation <donor_name> <amount> <charity_id>\n";
-            echo "Usage: composer run-script start export_data\n";
+            echo "Usage: composer run-script start view_charities" . PHP_EOL;
+            echo "Usage: composer run-script start add_charity <name> <email>" . PHP_EOL;
+            echo "Usage: composer run-script start edit_charity <id_number> <name> <email>" . PHP_EOL;
+            echo "Usage: composer run-script start delete_charity <id_number>" . PHP_EOL;
+            echo "Usage: composer run-script start add_donation <donor_name> <amount> <charity_id>" . PHP_EOL;
+            echo "Usage: composer run-script start export_data" . PHP_EOL;
             exit(1);
         }
 
         if ($argc == 2 && $argv[1] == 'view_charities') {
-            print_r(FileReader::ReadDataFromFile($filename));
+            print_r(FileReader::readDataFromFile($filename));
         }
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
 
-            CharityController::Create($filename, $argv[2], $argv[3]);
+            CharityController::create($filename, $argv[2], $argv[3]);
 
-            echo "New charity added successfully.\n";
+            echo "New charity added successfully." . PHP_EOL;
         }
 
         if ($argc == 5 && $argv[1] == 'edit_charity') {
-            CharityController::Update($filename, $argv[2], $argv[3], $argv[4]);
+            CharityController::update($filename, $argv[2], $argv[3], $argv[4]);
         }
 
         if ($argc == 3 && $argv[1] == 'delete_charity') {
-            FileReader::Delete($filename, $argv[2]);
+            FileReader::delete($filename, $argv[2]);
         }
 
         if ($argc == 5 && $argv[1] == 'add_donation') {
-            DonationsController::Create($filename, $argv[2], $argv[3], $argv[4]);
+            DonationsController::create($filename, $argv[2], $argv[3], $argv[4]);
         }
 
         if ($argc == 2 && $argv[1] == 'export_data') {
-            CharityController::WriteToCsv($filename);
+            CharityController::writeToCsv($filename);
         }
     }
 }

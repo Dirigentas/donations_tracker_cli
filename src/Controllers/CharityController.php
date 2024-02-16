@@ -17,16 +17,16 @@ final class CharityController
      * @param string $email The email address of the charity representative
      * @return void
      */
-    public static function Create(string $filename, string $name, string $email): void
+    public static function create(string $filename, string $name, string $email): void
     {
-        if (!Validation::EmailValidation($email)) {
-            echo "Incorrect email format.\n";
+        if (!Validation::emailValidation($email)) {
+            echo "Incorrect email format." . PHP_EOL;
             exit(1);
         }
 
         $newRecord = ['name' => $name, 'email' => $email];
 
-        FileReader::Create($filename, $newRecord);
+        FileReader::create($filename, $newRecord);
     }
 
     /**
@@ -38,11 +38,11 @@ final class CharityController
      * @param string $email The new email address for the charity representative
      * @return void
      */
-    public static function Update(string $filename, string $id, string $name, string $email): void
+    public static function update(string $filename, string $id, string $name, string $email): void
     {
         $newRecord = ['name' => $name, 'email' => $email];
 
-        FileReader::Update($filename, $id, $newRecord);
+        FileReader::update($filename, $id, $newRecord);
     }
     
     /**
@@ -51,7 +51,7 @@ final class CharityController
      * @param string $filename The name of the file containing the charity data
      * @return void
      */
-    public static function WriteToCsv(string $filename): void
+    public static function writeToCsv(string $filename): void
     {
         $csvFileName = fopen('./public/charities.csv', 'w');
 
@@ -61,7 +61,7 @@ final class CharityController
             "representative_email"
         ]);
 
-        foreach (FileReader::ReadDataFromFile($filename) as $key => $row) {
+        foreach (FileReader::readDataFromFile($filename) as $key => $row) {
             $key = substr($key, 4);
             array_pop($row);
             array_unshift($row, $key);

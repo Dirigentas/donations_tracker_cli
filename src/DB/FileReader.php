@@ -18,7 +18,7 @@ final class FileReader
      * @param string $filename The name of the file
      * @return int The ID for the new record
      */
-    public static function GetId(string $filename) : int
+    public static function getId(string $filename) : int
     {
         if (!file_exists($filename.'_id')) {
             file_put_contents($filename .'_id', json_encode(1));
@@ -38,15 +38,32 @@ final class FileReader
      * @param string $filename The name of the file
      * @return array The data read from the file
      */
-    public static function ReadDataFromFile(string $filename): array
+    public static function readDataFromFile(string $filename): array
     {
         if (!file_exists($filename . '.json')) {
             $data = [];
             return $data;
         } 
         else {
-            $data = file_get_contents($filename . '.json');
-            return json_decode($data, true);
+            $handle = fopen($filename . '.json', 'r');
+
+            $jsonData = '';
+            
+            while (!feof($handle)) {
+                $chunk = fread($handle, 8192);
+                $jsonData .= $chunk;
+            }
+            
+            fclose($handle);
+            
+            $jsonArray = json_decode($jsonData, true);
+            
+            if ($jsonArray === null && json_last_error() !== JSON_ERROR_NONE) {
+                echo "Error decoding JSON: " . json_last_error_msg() . PHP_EOL;
+                exit(1);
+            } else {
+                return $jsonArray;
+            }
         }
     }
 
@@ -57,7 +74,7 @@ final class FileReader
      * @param mixed $data The data to write to the file
      * @return void
      */
-    public static function WriteDataToFile(string $filename, array $data): void
+    public static function writeDataToFile(string $filename, array $data): void
     {
         $jsonData = json_encode($data);
         file_put_contents($filename . '.json', $jsonData);
@@ -70,13 +87,13 @@ final class FileReader
      * @param array $newRecord The new record to create
      * @return void
      */
-    public static function Create(string $filename, array $newRecord): void
+    public static function create(string $filename, array $newRecord): void
     {
-        $data = self::ReadDataFromFile($filename);
+        $data = self::readDataFromFile($filename);
 
-        $data['id: ' . self::GetId($filename)] = $newRecord;
+        $data['id: ' . self::getId($filename)] = $newRecord;
         
-        self::WriteDataToFile($filename, $data);
+        self::writeDataToFile($filename, $data);
     }
 
     /**
@@ -87,12 +104,12 @@ final class FileReader
      * @param array $newRecord The updated record
      * @return void
      */
-    public static function Update(string $filename, string $id, array $newRecord): void
+    public static function update(string $filename, string $id, array $newRecord): void
     {
-        $data = self::ReadDataFromFile($filename);
+        $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             $data['id: ' . $id] = $newRecord;
-            self::WriteDataToFile($filename, $data);
+            self::writeDataToFile($filename, $data);
         }
     }
 
@@ -106,12 +123,12 @@ final class FileReader
      * @param string $updatedFieldId The ID of the field to update
      * @return void
      */
-    public static function PartialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
+    public static function partialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
     {
-        $data = self::ReadDataFromFile($filename);
+        $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             $data['id: ' . $id]['donations'][$updatedFieldId] = $newRecord;
-            self::WriteDataToFile($filename, $data);
+            self::writeDataToFile($filename, $data);
         }
     }
 
@@ -122,12 +139,12 @@ final class FileReader
      * @param string $id The ID of the record to delete
      * @return void
      */
-    public static function Delete(string $filename, string $id): void
+    public static function delete(string $filename, string $id): void
     {
-        $data = self::ReadDataFromFile($filename);
+        $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             unset($data['id: ' . $id]);
-            self::WriteDataToFile($filename, $data);
+            self::writeDataToFile($filename, $data);
         }
     }
 }

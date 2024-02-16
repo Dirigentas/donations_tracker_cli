@@ -16,15 +16,15 @@ final class DonationsController
      * @param string $charityId The ID of the charity receiving the donation
      * @return void
      */
-    public static function Create(string $filename, string $donorName, $amount, $charityid): void
+    public static function create(string $filename, string $donorName, $amount, $charityid): void
     {
-        if (!Validation::DonationAmount($amount)) {
-            echo "Field 'amount' must be a number.\n";
+        if (!Validation::donationAmount($amount)) {
+            echo "Field 'amount' must be a number." . PHP_EOL;
             exit(1);
         }
 
         $donation = ['donor_name' => $donorName, 'amount' => $amount, 'date' => date(date('Y-m-d H:i'))];
 
-        FileReader::PartialUpdate($filename, $charityid, $donation, 'donations', 'id: ' . FileReader::GetId('./src/DB/donations'));
+        FileReader::partialUpdate($filename, $charityid, $donation, 'donations', 'id: ' . FileReader::getId('./src/DB/donations'));
     }
 }
