@@ -97,7 +97,7 @@ class JsonReader implements DataReaderInterface
 
     public function showAllData(): array
     {
-        // usort($this->data, fn ($a, $b) => $a['pavarde'] <=> $b['pavarde']);
+        uasort($this->data, fn ($a, $b) => $a['name'] <=> $b['name']);
 
         return $this->data;
     }
