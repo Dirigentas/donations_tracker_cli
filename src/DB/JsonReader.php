@@ -9,12 +9,14 @@
  declare(strict_types=1);
 
  namespace Aras\DonationsTrackerCli\db;
+
+ use Aras\DonationsTrackerCli\db\DataReaderInterface;
  
-class JsonReader
+class JsonReader implements DataReaderInterface
 {   
     private $data, $filename;
 
-        /**
+    /**
      * Read data from a file.
      * 
      * @param string $filename The name of the file
@@ -84,8 +86,20 @@ class JsonReader
         }
     }
 
+    public function showData(int $id): array
+    {
+        foreach ($this->data as $key => $data) {
+            if ($key == "id: " . $id) {
+                return $data;
+            }
+        }
+        return [];
+    }
+
     public function showAllData(): array
     {
+        // usort($this->data, fn ($a, $b) => $a['pavarde'] <=> $b['pavarde']);
+
         return $this->data;
     }
 
@@ -96,7 +110,7 @@ class JsonReader
      * @param array $newRecord The new record to create
      * @return void
      */
-    public function create(string $filename, array $newRecord): void
+    public function createData(array $newRecord): void
     {
         // $data = self::readDataFromFile($filename);
 
@@ -113,7 +127,7 @@ class JsonReader
      * @param array $newRecord The updated record
      * @return void
      */
-    public function update(string $filename, string $id, array $newRecord): void
+    public function updateData(int $id, array $newRecord): void
     {
         // $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
@@ -148,7 +162,7 @@ class JsonReader
      * @param string $id The ID of the record to delete
      * @return void
      */
-    public function delete(string $filename, string $id): void
+    public function deleteData(int $id): void
     {
         // $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
