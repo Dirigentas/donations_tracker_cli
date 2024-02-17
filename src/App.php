@@ -26,14 +26,6 @@ final class App
      */
     public static function router(int $argc, array $argv)
     {   
-        // echo " _____________\n";
-        // echo __DIR__ . "\n";
-        // echo __DIR__ . "\\" . $filename . "\n";
-        // echo " _____________\n";
-        // echo __FILE__ . "\n";
-        // echo " _____________\n";
-        // die;
-
         if ($argc < 2) {
             echo "Usage: composer run-script start view_charities" . PHP_EOL;
             echo "Usage: composer run-script start add_charity <name> <email>" . PHP_EOL;
@@ -50,25 +42,23 @@ final class App
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
 
-            (new CharityController())->create($argv[2], $argv[3]);
-
-            return print_r("New charity added successfully." . PHP_EOL);
+            return (new CharityController())->create($argv[2], $argv[3]);
         }
-
+        
         if ($argc == 5 && $argv[1] == 'edit_charity') {
-            CharityController::update($filename, $argv[2], $argv[3], $argv[4]);
+            return (new CharityController())->update(+$argv[2], $argv[3], $argv[4]);
         }
 
         if ($argc == 3 && $argv[1] == 'delete_charity') {
-            JsonReader::delete($filename, $argv[2]);
+            JsonReader::delete($fileName, $argv[2]);
         }
 
         if ($argc == 5 && $argv[1] == 'add_donation') {
-            DonationsController::create($filename, $argv[2], $argv[3], $argv[4]);
+            DonationsController::create($fileName, $argv[2], $argv[3], $argv[4]);
         }
 
         if ($argc == 2 && $argv[1] == 'export_data') {
-            CharityController::writeToCsv($filename);
+            CharityController::writeToCsv($fileName);
         }
     }
 }

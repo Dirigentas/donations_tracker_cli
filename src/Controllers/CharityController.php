@@ -9,26 +9,26 @@ use Aras\DonationsTrackerCli\Validation;
 
 class CharityController
 {
-    private $filename = 'charities';
+    private $fileName = 'charities';
     
 
     /**
      * Create a new charity record.
      *
-     * @param string $filename The name of the file to store the data
+     * @param string $fileName The name of the file to store the data
      * @param string $name The name of the charity
      * @param string $email The email address of the charity representative
      * @return void
      */
     public function index()
     {
-        return print_r((new JsonReader($this->filename))->showAllData());
+        return print_r((new JsonReader($this->fileName))->showAllData());
     }
 
     /**
      * Create a new charity record.
      *
-     * @param string $filename The name of the file to store the data
+     * @param string $fileName The name of the file to store the data
      * @param string $name The name of the charity
      * @param string $email The email address of the charity representative
      * @return void
@@ -42,48 +42,48 @@ class CharityController
 
         $newRecord = ['name' => $name, 'email' => $email];
 
-        (new JsonReader($this->filename))->createData($newRecord);
+        (new JsonReader($this->fileName))->createData($newRecord);
     }
 
     /**
      * Update an existing charity record.
      *
-     * @param string $filename The name of the file containing the data
+     * @param string $fileName The name of the file containing the data
      * @param string $id The ID of the charity to update
      * @param string $name The new name for the charity
      * @param string $email The new email address for the charity representative
      * @return void
      */
-    public function update(string $filename, string $id, string $name, string $email): void
+    public function update(int $id, string $name, string $email): void
     {
-        // $newRecord = ['name' => $name, 'email' => $email];
+        $newRecord = ['name' => $name, 'email' => $email];
 
-        // JsonReader::update($filename, $id, $newRecord);
+        (new JsonReader($this->fileName))->updateData($id, $newRecord);
     }
     
     /**
      * Write charity data to a CSV file.
      *
-     * @param string $filename The name of the file containing the charity data
+     * @param string $fileName The name of the file containing the charity data
      * @return void
      */
-    public function writeToCsv(string $filename): void
+    public function writeToCsv(string $fileName): void
     {
-        $csvFileName = fopen('./public/charities.csv', 'w');
+        $csvfileName = fopen('./public/charities.csv', 'w');
 
-        fputcsv($csvFileName, [
+        fputcsv($csvfileName, [
             "id",
             "name",
             "representative_email"
         ]);
 
-        // foreach (JsonReader::readDataFromFile($filename) as $key => $row) {
+        // foreach (JsonReader::readDataFromFile($fileName) as $key => $row) {
         //     $key = substr($key, 4);
         //     array_pop($row);
         //     array_unshift($row, $key);
-        //     fputcsv($csvFileName, $row);
+        //     fputcsv($csvfileName, $row);
         // }
-        fclose($csvFileName);
+        fclose($csvfileName);
     }
 
 }

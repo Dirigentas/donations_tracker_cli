@@ -14,23 +14,23 @@
  
 class JsonReader implements DataReaderInterface
 {   
-    private $filename, $data;
+    private $fileName, $data;
 
     /**
      * Read data from a file.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @return array The data read from the file
      */
-    public function __construct(string $filename)
+    public function __construct(string $fileName)
     {
-        $this->filename = $filename;
+        $this->fileName = $fileName;
 
-        if (!file_exists(__DIR__ . "/" . $this->filename . '.json')) {
+        if (!file_exists(__DIR__ . "/" . $this->fileName . '.json')) {
             $this->data = [];
         } 
         else {
-            $handle = fopen(__DIR__ . "/" . $this->filename . '.json', 'r');
+            $handle = fopen(__DIR__ . "/" . $this->fileName . '.json', 'r');
 
             $jsonData = '';
             
@@ -55,32 +55,32 @@ class JsonReader implements DataReaderInterface
     /**
      * Write data to a file.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param mixed $data The data to write to the file
      * @return void
      */
     public function __destruct()
     {
         $jsonData = json_encode($this->data);
-        file_put_contents(__DIR__ . '/' . $this->filename . '.json', $jsonData);
+        file_put_contents(__DIR__ . '/' . $this->fileName . '.json', $jsonData);
     }
 
     /**
      * Get the ID for a new record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @return int The ID for the new record
      */
     private function getId(): int
     {
-        if (!file_exists(__DIR__ . '/' . $this->filename.'_id')) {
-            file_put_contents(__DIR__ . '/' . $this->filename .'_id', json_encode(1));
+        if (!file_exists(__DIR__ . '/' . $this->fileName.'_id')) {
+            file_put_contents(__DIR__ . '/' . $this->fileName .'_id', json_encode(1));
             return 1;
         } 
         else {
-            $id = json_decode(file_get_contents(__DIR__ . '/' . $this->filename .'_id'), true);
+            $id = json_decode(file_get_contents(__DIR__ . '/' . $this->fileName .'_id'), true);
             $id++;
-            file_put_contents(__DIR__ . '/' . $this->filename .'_id', json_encode($id));
+            file_put_contents(__DIR__ . '/' . $this->fileName .'_id', json_encode($id));
             return $id;
         }
     }
@@ -105,64 +105,66 @@ class JsonReader implements DataReaderInterface
     /**
      * Create a new record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param array $newRecord The new record to create
      * @return void
      */
     public function createData(array $newRecord): void
     {
         $this->data['id: ' . $this->getId()] = $newRecord;
+        echo "New data in \"$this->fileName\" added succesfully." . PHP_EOL;
     }
 
     /**
      * Update an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to update
      * @param array $newRecord The updated record
      * @return void
      */
     public function updateData(int $id, array $newRecord): void
     {
-        // $data = self::readDataFromFile($filename);
-        if (isset($data['id: ' . $id])) {
-            $data['id: ' . $id] = $newRecord;
-            // self::writeDataToFile($filename, $data);
+        if (isset($this->data['id: ' . $id])) {
+            $this->data['id: ' . $id] = $newRecord;
+            echo "$this->fileName data id: $id edited successfully." . PHP_EOL;
+        } else {
+            echo "$this->fileName data id: $id is not present." . PHP_EOL;
         }
     }
 
     /**
      * Partially update an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to update
      * @param array $newRecord The updated record
      * @param string $updatedField The field to update
      * @param string $updatedFieldId The ID of the field to update
      * @return void
      */
-    public function partialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
+    public function partialUpdate(string $fileName, $id, array $newRecord, string $updatedField, $updatedFieldId): void
     {
-        // $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($fileName);
         if (isset($data['id: ' . $id])) {
             $data['id: ' . $id]['donations'][$updatedFieldId] = $newRecord;
-            // self::writeDataToFile($filename, $data);
+            // self::writeDataToFile($fileName, $data);
         }
     }
 
     /**
      * Delete an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to delete
      * @return void
      */
     public function deleteData(int $id): void
     {
-        // $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($fileName);
         if (isset($data['id: ' . $id])) {
             unset($data['id: ' . $id]);
-            // self::writeDataToFile($filename, $data);
+            // self::writeDataToFile($fileName, $data);
         }
     }
 }
