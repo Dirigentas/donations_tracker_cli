@@ -11,6 +11,18 @@ class CharityController
 {
     private $fileName = 'charities';
     
+    /**
+     * Create a new charity record.
+     *
+     * @param string $fileName The name of the file to store the data
+     * @param string $name The name of the charity
+     * @param string $email The email address of the charity representative
+     * @return void
+     */
+    public function show(int $id): void
+    {
+        print_r((new JsonReader($this->fileName))->showData($id));
+    }
 
     /**
      * Create a new charity record.
@@ -20,9 +32,9 @@ class CharityController
      * @param string $email The email address of the charity representative
      * @return void
      */
-    public function index()
+    public function showAll(): void
     {
-        return print_r((new JsonReader($this->fileName))->showAllData());
+        print_r((new JsonReader($this->fileName))->showAllData());
     }
 
     /**

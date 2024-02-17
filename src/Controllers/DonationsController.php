@@ -5,8 +5,11 @@ namespace Aras\DonationsTrackerCli\Controllers;
 use Aras\DonationsTrackerCli\db\JsonReader;
 use Aras\DonationsTrackerCli\Validation;
 
-final class DonationsController
+class DonationsController
 {
+    private $fileName = 'charities';
+    private $editableField = 'donations';
+
     /**
      * Create a new donation record.
      *
@@ -16,7 +19,7 @@ final class DonationsController
      * @param string $charityId The ID of the charity receiving the donation
      * @return void
      */
-    public static function create(string $filename, string $donorName, $amount, $charityid): void
+    public function create(string $donorName, string $amount, int $charityId): void
     {
         if (!Validation::donationAmount($amount)) {
             echo "Field 'amount' must be a number." . PHP_EOL;
@@ -24,7 +27,7 @@ final class DonationsController
         }
 
         $donation = ['donor_name' => $donorName, 'amount' => $amount, 'date' => date(date('Y-m-d H:i'))];
-
-        JsonReader::partialUpdate($filename, $charityid, $donation, 'donations', 'id: ' . JsonReader::getId('./src/DB/donations'));
+        
+        (new JsonReader($this->fileName))->partialUpdate($charityId, $donation, $this->editableField, 'id: ' . (new JsonReader($this->editableField))->getId());
     }
 }

@@ -61,8 +61,10 @@ class JsonReader implements DataReaderInterface
      */
     public function __destruct()
     {
-        $jsonData = json_encode($this->data);
-        file_put_contents(__DIR__ . '/' . $this->fileName . '.json', $jsonData);
+        if ($this->data !== []) {
+            $jsonData = json_encode($this->data);
+            file_put_contents(__DIR__ . '/' . $this->fileName . '.json', $jsonData);
+        }
     }
 
     /**
@@ -71,7 +73,7 @@ class JsonReader implements DataReaderInterface
      * @param string $fileName The name of the file
      * @return int The ID for the new record
      */
-    private function getId(): int
+    public function getId(): int
     {
         if (!file_exists(__DIR__ . '/' . $this->fileName.'_id')) {
             file_put_contents(__DIR__ . '/' . $this->fileName .'_id', json_encode(1));
@@ -87,12 +89,18 @@ class JsonReader implements DataReaderInterface
 
     public function showData(int $id): array
     {
-        // foreach ($this->data as $key => $data) {
-        //     if ($key == "id: " . $id) {
-        //         return $data;
-        //     }
-        // }
+        foreach ($this->data as $key => $data) {
+            if ($key == "id: " . $id) {
+                return $data;
+            }
+        }
         return [];
+
+        if (isset($this->data['id: ' . $id])) {
+            return $this->data['id: ' . $id];
+        } else {
+            echo "\"$this->fileName\" data id: $id is not present." . PHP_EOL;
+        }
     }
 
     public function showAllData(): array
@@ -139,16 +147,14 @@ class JsonReader implements DataReaderInterface
      * @param string $fileName The name of the file
      * @param string $id The ID of the record to update
      * @param array $newRecord The updated record
-     * @param string $updatedField The field to update
-     * @param string $updatedFieldId The ID of the field to update
+     * @param string $editableField The field to update
+     * @param string $editableFieldId The ID of the field to update
      * @return void
      */
-    public function partialUpdate(string $fileName, $id, array $newRecord, string $updatedField, $updatedFieldId): void
+    public function partialUpdate(int $id, array $newRecord, string $editableField, string $editableFieldId): void
     {
-        // $data = self::readDataFromFile($fileName);
-        if (isset($data['id: ' . $id])) {
-            $data['id: ' . $id]['donations'][$updatedFieldId] = $newRecord;
-            // self::writeDataToFile($fileName, $data);
+        if (isset($this->data['id: ' . $id])) {
+            $this->data['id: ' . $id][$editableField][$editableFieldId] = $newRecord;
         }
     }
 
