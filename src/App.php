@@ -24,45 +24,46 @@ final class App
      * @param array $argv An array of the arguments passed to the script
      * @return void
      */
-    public static function router(int $argc, array $argv): void
-    {      
-        $filename = './src/db/charities';
-
+    public static function router(int $argc, array $argv)
+    {   
         if ($argc < 2) {
+            echo "Usage: composer run-script start view_charity <id_number>" . PHP_EOL;
             echo "Usage: composer run-script start view_charities" . PHP_EOL;
             echo "Usage: composer run-script start add_charity <name> <email>" . PHP_EOL;
             echo "Usage: composer run-script start edit_charity <id_number> <name> <email>" . PHP_EOL;
             echo "Usage: composer run-script start delete_charity <id_number>" . PHP_EOL;
             echo "Usage: composer run-script start add_donation <donor_name> <amount> <charity_id>" . PHP_EOL;
             echo "Usage: composer run-script start export_data" . PHP_EOL;
-            exit(1);
+            die;
+        }
+
+        if ($argc == 3 && $argv[1] == 'view_charity') {
+            return (new CharityController())->show(+$argv[2]);
         }
 
         if ($argc == 2 && $argv[1] == 'view_charities') {
-            print_r(JsonReader::readDataFromFile($filename));
+            return (new CharityController())->showAll();
         }
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
 
-            CharityController::create($filename, $argv[2], $argv[3]);
-
-            echo "New charity added successfully." . PHP_EOL;
+            return (new CharityController())->create($argv[2], $argv[3]);
         }
-
+        
         if ($argc == 5 && $argv[1] == 'edit_charity') {
-            CharityController::update($filename, $argv[2], $argv[3], $argv[4]);
+            return (new CharityController())->update(+$argv[2], $argv[3], $argv[4]);
         }
-
+        
         if ($argc == 3 && $argv[1] == 'delete_charity') {
-            JsonReader::delete($filename, $argv[2]);
+            return (new CharityController())->delete(+$argv[2]);
         }
 
         if ($argc == 5 && $argv[1] == 'add_donation') {
-            DonationsController::create($filename, $argv[2], $argv[3], $argv[4]);
+            return (new DonationsController())->create($argv[2], $argv[3], +$argv[4]);
         }
 
         if ($argc == 2 && $argv[1] == 'export_data') {
-            CharityController::writeToCsv($filename);
+            return (new CharityController())->writeToCsv();
         }
     }
 }

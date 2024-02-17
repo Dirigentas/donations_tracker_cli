@@ -9,43 +9,28 @@
  declare(strict_types=1);
 
  namespace Aras\DonationsTrackerCli\db;
+
+ use Aras\DonationsTrackerCli\db\DataReaderInterface;
  
-final class JsonReader
+class JsonReader implements DataReaderInterface
 {   
-    /**
-     * Get the ID for a new record.
-     * 
-     * @param string $filename The name of the file
-     * @return int The ID for the new record
-     */
-    public static function getId(string $filename) : int
-    {
-        if (!file_exists($filename.'_id')) {
-            file_put_contents($filename .'_id', json_encode(1));
-            return 1;
-        } 
-        else {
-            $id = json_decode(file_get_contents($filename .'_id'), true);
-            $id++;
-            file_put_contents($filename .'_id', json_encode($id));
-            return $id;
-        }
-    }
+    private $fileName, $data;
 
     /**
      * Read data from a file.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @return array The data read from the file
      */
-    public static function readDataFromFile(string $filename): array
+    public function __construct(string $fileName)
     {
-        if (!file_exists($filename . '.json')) {
-            $data = [];
-            return $data;
+        $this->fileName = $fileName;
+
+        if (!file_exists(__DIR__ . "/" . $this->fileName . '.json')) {
+            $this->data = [];
         } 
         else {
-            $handle = fopen($filename . '.json', 'r');
+            $handle = fopen(__DIR__ . "/" . $this->fileName . '.json', 'r');
 
             $jsonData = '';
             
@@ -62,7 +47,7 @@ final class JsonReader
                 echo "Error decoding JSON: " . json_last_error_msg() . PHP_EOL;
                 exit(1);
             } else {
-                return $jsonArray;
+                $this->data = $jsonArray;
             }
         }
     }
@@ -70,81 +55,123 @@ final class JsonReader
     /**
      * Write data to a file.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param mixed $data The data to write to the file
      * @return void
      */
-    public static function writeDataToFile(string $filename, array $data): void
+    public function __destruct()
     {
-        $jsonData = json_encode($data);
-        file_put_contents($filename . '.json', $jsonData);
+        if ($this->data !== []) {
+            $jsonData = json_encode($this->data);
+            file_put_contents(__DIR__ . '/' . $this->fileName . '.json', $jsonData);
+        }
+    }
+
+    /**
+     * Get the ID for a new record.
+     * 
+     * @param string $fileName The name of the file
+     * @return int The ID for the new record
+     */
+    public function getId(): int
+    {
+        if (!file_exists(__DIR__ . '/' . $this->fileName.'_id')) {
+            file_put_contents(__DIR__ . '/' . $this->fileName .'_id', json_encode(1));
+            return 1;
+        } 
+        else {
+            $id = json_decode(file_get_contents(__DIR__ . '/' . $this->fileName .'_id'), true);
+            $id++;
+            file_put_contents(__DIR__ . '/' . $this->fileName .'_id', json_encode($id));
+            return $id;
+        }
+    }
+
+    public function showData(int $id): array
+    {
+        foreach ($this->data as $key => $data) {
+            if ($key == "id: " . $id) {
+                return $data;
+            }
+        }
+        return [];
+
+        if (isset($this->data['id: ' . $id])) {
+            return $this->data['id: ' . $id];
+        } else {
+            echo "\"$this->fileName\" data id: $id is not present." . PHP_EOL;
+        }
+    }
+
+    public function showAllData(): array
+    {
+        uasort($this->data, fn ($a, $b) => $a['name'] <=> $b['name']);
+
+        return $this->data;
     }
 
     /**
      * Create a new record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param array $newRecord The new record to create
      * @return void
      */
-    public static function create(string $filename, array $newRecord): void
+    public function createData(array $newRecord): void
     {
-        $data = self::readDataFromFile($filename);
-
-        $data['id: ' . self::getId($filename)] = $newRecord;
-        
-        self::writeDataToFile($filename, $data);
+        $this->data['id: ' . $this->getId()] = $newRecord;
+        echo "New data in \"$this->fileName\" added successfully." . PHP_EOL;
     }
 
     /**
      * Update an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to update
      * @param array $newRecord The updated record
      * @return void
      */
-    public static function update(string $filename, string $id, array $newRecord): void
+    public function updateData(int $id, array $newRecord): void
     {
-        $data = self::readDataFromFile($filename);
-        if (isset($data['id: ' . $id])) {
-            $data['id: ' . $id] = $newRecord;
-            self::writeDataToFile($filename, $data);
+        if (isset($this->data['id: ' . $id])) {
+            $this->data['id: ' . $id] = $newRecord;
+            echo "$this->fileName data id: $id edited successfully." . PHP_EOL;
+        } else {
+            echo "$this->fileName data id: $id is not present." . PHP_EOL;
         }
     }
 
     /**
      * Partially update an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to update
      * @param array $newRecord The updated record
-     * @param string $updatedField The field to update
-     * @param string $updatedFieldId The ID of the field to update
+     * @param string $editableField The field to update
+     * @param string $editableFieldId The ID of the field to update
      * @return void
      */
-    public static function partialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
+    public function partialUpdate(int $id, array $newRecord, string $editableField, string $editableFieldId): void
     {
-        $data = self::readDataFromFile($filename);
-        if (isset($data['id: ' . $id])) {
-            $data['id: ' . $id]['donations'][$updatedFieldId] = $newRecord;
-            self::writeDataToFile($filename, $data);
+        if (isset($this->data['id: ' . $id])) {
+            $this->data['id: ' . $id][$editableField][$editableFieldId] = $newRecord;
         }
     }
 
     /**
      * Delete an existing record.
      * 
-     * @param string $filename The name of the file
+     * @param string $fileName The name of the file
      * @param string $id The ID of the record to delete
      * @return void
      */
-    public static function delete(string $filename, string $id): void
+    public function deleteData(int $id): void
     {
-        $data = self::readDataFromFile($filename);
-        if (isset($data['id: ' . $id])) {
-            unset($data['id: ' . $id]);
-            self::writeDataToFile($filename, $data);
+        if (isset($this->data['id: ' . $id])) {
+            unset($this->data['id: ' . $id]);
+            echo "\"$this->fileName\" data id: $id deleted successfully." . PHP_EOL;
+        } else {
+            echo "\"$this->fileName\" data id: $id is not present." . PHP_EOL;
         }
     }
 }

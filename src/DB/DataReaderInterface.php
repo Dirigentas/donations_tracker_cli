@@ -1,15 +1,18 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aras\DonationsTrackerCli\db;
  
 interface DataReaderInterface
 {
-    function create(array $userData) : void;
+    function createData(array $newRecord): void;
  
-    function update(int $userId, string $type, array $userData) : void;
+    function updateData(int $id, array $newRecord): void;
  
-    function delete(int $userId) : void;
+    function deleteData(int $id): void;
  
-    function show(int $userId) : array;
+    function showData(int $id): array;
     
-    function showAll() : array;
+    function showAllData(): array;
 }
