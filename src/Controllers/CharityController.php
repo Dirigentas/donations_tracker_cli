@@ -7,8 +7,24 @@ namespace Aras\DonationsTrackerCli\Controllers;
 use Aras\DonationsTrackerCli\db\JsonReader;
 use Aras\DonationsTrackerCli\Validation;
 
-final class CharityController
+class CharityController
 {
+    private $filename = './src/db/charities';
+    
+
+    /**
+     * Create a new charity record.
+     *
+     * @param string $filename The name of the file to store the data
+     * @param string $name The name of the charity
+     * @param string $email The email address of the charity representative
+     * @return void
+     */
+    public function index()
+    {
+        return print_r((new JsonReader($this->filename))->showAllData());
+    }
+
     /**
      * Create a new charity record.
      *
@@ -61,12 +77,12 @@ final class CharityController
             "representative_email"
         ]);
 
-        foreach (JsonReader::readDataFromFile($filename) as $key => $row) {
-            $key = substr($key, 4);
-            array_pop($row);
-            array_unshift($row, $key);
-            fputcsv($csvFileName, $row);
-        }
+        // foreach (JsonReader::readDataFromFile($filename) as $key => $row) {
+        //     $key = substr($key, 4);
+        //     array_pop($row);
+        //     array_unshift($row, $key);
+        //     fputcsv($csvFileName, $row);
+        // }
         fclose($csvFileName);
     }
 

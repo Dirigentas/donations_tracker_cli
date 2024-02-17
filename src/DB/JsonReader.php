@@ -22,10 +22,13 @@ class JsonReader
      */
     public function __construct(string $filename)
     {
+        $this->filename = $filename;
+
         if (!file_exists($filename . '.json')) {
             $this->data = [];
         } 
         else {
+            // $handle = fopen(__DIR__ . "\\" . $filename . '.json', 'r');
             $handle = fopen($filename . '.json', 'r');
 
             $jsonData = '';
@@ -49,6 +52,19 @@ class JsonReader
     }
 
     /**
+     * Write data to a file.
+     * 
+     * @param string $filename The name of the file
+     * @param mixed $data The data to write to the file
+     * @return void
+     */
+    public function __destruct()
+    {
+        $jsonData = json_encode($this->data);
+        file_put_contents($this->filename . '.json', $jsonData);
+    }
+
+    /**
      * Get the ID for a new record.
      * 
      * @param string $filename The name of the file
@@ -68,19 +84,9 @@ class JsonReader
         }
     }
 
-
-
-    /**
-     * Write data to a file.
-     * 
-     * @param string $filename The name of the file
-     * @param mixed $data The data to write to the file
-     * @return void
-     */
-    public static function writeDataToFile(string $filename, array $data): void
+    public function showAllData(): array
     {
-        $jsonData = json_encode($data);
-        file_put_contents($filename . '.json', $jsonData);
+        return $this->data;
     }
 
     /**
@@ -90,13 +96,13 @@ class JsonReader
      * @param array $newRecord The new record to create
      * @return void
      */
-    public static function create(string $filename, array $newRecord): void
+    public function create(string $filename, array $newRecord): void
     {
-        $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($filename);
 
         $data['id: ' . self::getId($filename)] = $newRecord;
         
-        self::writeDataToFile($filename, $data);
+        // self::writeDataToFile($filename, $data);
     }
 
     /**
@@ -107,12 +113,12 @@ class JsonReader
      * @param array $newRecord The updated record
      * @return void
      */
-    public static function update(string $filename, string $id, array $newRecord): void
+    public function update(string $filename, string $id, array $newRecord): void
     {
-        $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             $data['id: ' . $id] = $newRecord;
-            self::writeDataToFile($filename, $data);
+            // self::writeDataToFile($filename, $data);
         }
     }
 
@@ -126,12 +132,12 @@ class JsonReader
      * @param string $updatedFieldId The ID of the field to update
      * @return void
      */
-    public static function partialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
+    public function partialUpdate(string $filename, $id, array $newRecord, string $updatedField, $updatedFieldId): void
     {
-        $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             $data['id: ' . $id]['donations'][$updatedFieldId] = $newRecord;
-            self::writeDataToFile($filename, $data);
+            // self::writeDataToFile($filename, $data);
         }
     }
 
@@ -142,12 +148,12 @@ class JsonReader
      * @param string $id The ID of the record to delete
      * @return void
      */
-    public static function delete(string $filename, string $id): void
+    public function delete(string $filename, string $id): void
     {
-        $data = self::readDataFromFile($filename);
+        // $data = self::readDataFromFile($filename);
         if (isset($data['id: ' . $id])) {
             unset($data['id: ' . $id]);
-            self::writeDataToFile($filename, $data);
+            // self::writeDataToFile($filename, $data);
         }
     }
 }

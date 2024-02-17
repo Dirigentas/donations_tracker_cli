@@ -24,9 +24,16 @@ final class App
      * @param array $argv An array of the arguments passed to the script
      * @return void
      */
-    public static function router(int $argc, array $argv): void
-    {      
-        $filename = './src/db/charities';
+    public static function router(int $argc, array $argv)
+    {   
+        // $filename = "aras.php";
+        // echo " _____________\n";
+        // echo __DIR__ . "\n";
+        // echo __DIR__ . "\\" . $filename . "\n";
+        // echo " _____________\n";
+        // echo __FILE__ . "\n";
+        // echo " _____________\n";
+        // die;
 
         if ($argc < 2) {
             echo "Usage: composer run-script start view_charities" . PHP_EOL;
@@ -39,7 +46,7 @@ final class App
         }
 
         if ($argc == 2 && $argv[1] == 'view_charities') {
-            print_r(JsonReader::readDataFromFile($filename));
+            return (new CharityController())->index();
         }
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
