@@ -90,23 +90,23 @@ class CharityController
      * @param string $fileName The name of the file containing the charity data
      * @return void
      */
-    public function writeToCsv(string $fileName): void
+    public function writeToCsv(): void
     {
-        $csvfileName = fopen('./public/charities.csv', 'w');
+        $csvFileName = fopen('./public/charities.csv', 'w');
 
-        fputcsv($csvfileName, [
+        fputcsv($csvFileName, [
             "id",
             "name",
             "representative_email"
         ]);
 
-        // foreach (JsonReader::readDataFromFile($fileName) as $key => $row) {
-        //     $key = substr($key, 4);
-        //     array_pop($row);
-        //     array_unshift($row, $key);
-        //     fputcsv($csvfileName, $row);
-        // }
-        fclose($csvfileName);
+        foreach ((new JsonReader($this->fileName))->showAllData() as $key => $row) {
+            $key = substr($key, 4);
+            array_pop($row);
+            array_unshift($row, $key);
+            fputcsv($csvFileName, $row);
+        }
+        fclose($csvFileName);
     }
 
 }
