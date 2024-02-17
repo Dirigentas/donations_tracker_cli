@@ -26,7 +26,6 @@ final class App
      */
     public static function router(int $argc, array $argv)
     {   
-        // $filename = "aras.php";
         // echo " _____________\n";
         // echo __DIR__ . "\n";
         // echo __DIR__ . "\\" . $filename . "\n";
@@ -51,9 +50,9 @@ final class App
 
         if ($argc == 4 && $argv[1] == 'add_charity') {
 
-            CharityController::create($filename, $argv[2], $argv[3]);
+            (new CharityController())->create($argv[2], $argv[3]);
 
-            echo "New charity added successfully." . PHP_EOL;
+            return print_r("New charity added successfully." . PHP_EOL);
         }
 
         if ($argc == 5 && $argv[1] == 'edit_charity') {

@@ -9,7 +9,7 @@ use Aras\DonationsTrackerCli\Validation;
 
 class CharityController
 {
-    private $filename = './src/db/charities';
+    private $filename = 'charities';
     
 
     /**
@@ -33,7 +33,7 @@ class CharityController
      * @param string $email The email address of the charity representative
      * @return void
      */
-    public static function create(string $filename, string $name, string $email): void
+    public function create(string $name, string $email): void
     {
         if (!Validation::emailValidation($email)) {
             echo "Incorrect email format." . PHP_EOL;
@@ -42,7 +42,7 @@ class CharityController
 
         $newRecord = ['name' => $name, 'email' => $email];
 
-        JsonReader::create($filename, $newRecord);
+        (new JsonReader($this->filename))->createData($newRecord);
     }
 
     /**
@@ -54,11 +54,11 @@ class CharityController
      * @param string $email The new email address for the charity representative
      * @return void
      */
-    public static function update(string $filename, string $id, string $name, string $email): void
+    public function update(string $filename, string $id, string $name, string $email): void
     {
-        $newRecord = ['name' => $name, 'email' => $email];
+        // $newRecord = ['name' => $name, 'email' => $email];
 
-        JsonReader::update($filename, $id, $newRecord);
+        // JsonReader::update($filename, $id, $newRecord);
     }
     
     /**
@@ -67,7 +67,7 @@ class CharityController
      * @param string $filename The name of the file containing the charity data
      * @return void
      */
-    public static function writeToCsv(string $filename): void
+    public function writeToCsv(string $filename): void
     {
         $csvFileName = fopen('./public/charities.csv', 'w');
 

@@ -14,7 +14,7 @@
  
 class JsonReader implements DataReaderInterface
 {   
-    private $data, $filename;
+    private $filename, $data;
 
     /**
      * Read data from a file.
@@ -26,12 +26,11 @@ class JsonReader implements DataReaderInterface
     {
         $this->filename = $filename;
 
-        if (!file_exists($filename . '.json')) {
+        if (!file_exists(__DIR__ . "/" . $this->filename . '.json')) {
             $this->data = [];
         } 
         else {
-            // $handle = fopen(__DIR__ . "\\" . $filename . '.json', 'r');
-            $handle = fopen($filename . '.json', 'r');
+            $handle = fopen(__DIR__ . "/" . $this->filename . '.json', 'r');
 
             $jsonData = '';
             
@@ -63,7 +62,7 @@ class JsonReader implements DataReaderInterface
     public function __destruct()
     {
         $jsonData = json_encode($this->data);
-        file_put_contents($this->filename . '.json', $jsonData);
+        file_put_contents(__DIR__ . '/' . $this->filename . '.json', $jsonData);
     }
 
     /**
@@ -72,27 +71,27 @@ class JsonReader implements DataReaderInterface
      * @param string $filename The name of the file
      * @return int The ID for the new record
      */
-    public static function getId(string $filename) : int
+    private function getId(): int
     {
-        if (!file_exists($filename.'_id')) {
-            file_put_contents($filename .'_id', json_encode(1));
+        if (!file_exists(__DIR__ . '/' . $this->filename.'_id')) {
+            file_put_contents(__DIR__ . '/' . $this->filename .'_id', json_encode(1));
             return 1;
         } 
         else {
-            $id = json_decode(file_get_contents($filename .'_id'), true);
+            $id = json_decode(file_get_contents(__DIR__ . '/' . $this->filename .'_id'), true);
             $id++;
-            file_put_contents($filename .'_id', json_encode($id));
+            file_put_contents(__DIR__ . '/' . $this->filename .'_id', json_encode($id));
             return $id;
         }
     }
 
     public function showData(int $id): array
     {
-        foreach ($this->data as $key => $data) {
-            if ($key == "id: " . $id) {
-                return $data;
-            }
-        }
+        // foreach ($this->data as $key => $data) {
+        //     if ($key == "id: " . $id) {
+        //         return $data;
+        //     }
+        // }
         return [];
     }
 
@@ -112,11 +111,7 @@ class JsonReader implements DataReaderInterface
      */
     public function createData(array $newRecord): void
     {
-        // $data = self::readDataFromFile($filename);
-
-        $data['id: ' . self::getId($filename)] = $newRecord;
-        
-        // self::writeDataToFile($filename, $data);
+        $this->data['id: ' . $this->getId()] = $newRecord;
     }
 
     /**
