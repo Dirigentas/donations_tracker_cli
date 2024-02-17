@@ -48,9 +48,9 @@ final class App
         if ($argc == 5 && $argv[1] == 'edit_charity') {
             return (new CharityController())->update(+$argv[2], $argv[3], $argv[4]);
         }
-
+        
         if ($argc == 3 && $argv[1] == 'delete_charity') {
-            JsonReader::delete($fileName, $argv[2]);
+            return (new CharityController())->delete(+$argv[2]);
         }
 
         if ($argc == 5 && $argv[1] == 'add_donation') {

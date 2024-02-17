@@ -60,6 +60,17 @@ class CharityController
 
         (new JsonReader($this->fileName))->updateData($id, $newRecord);
     }
+
+    /**
+     * Delete an existing charity record.
+     *
+     * @param string $id The ID of the charity to update
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        (new JsonReader($this->fileName))->deleteData($id);
+    }
     
     /**
      * Write charity data to a CSV file.

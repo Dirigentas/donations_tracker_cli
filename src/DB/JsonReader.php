@@ -112,7 +112,7 @@ class JsonReader implements DataReaderInterface
     public function createData(array $newRecord): void
     {
         $this->data['id: ' . $this->getId()] = $newRecord;
-        echo "New data in \"$this->fileName\" added succesfully." . PHP_EOL;
+        echo "New data in \"$this->fileName\" added successfully." . PHP_EOL;
     }
 
     /**
@@ -161,10 +161,11 @@ class JsonReader implements DataReaderInterface
      */
     public function deleteData(int $id): void
     {
-        // $data = self::readDataFromFile($fileName);
-        if (isset($data['id: ' . $id])) {
-            unset($data['id: ' . $id]);
-            // self::writeDataToFile($fileName, $data);
+        if (isset($this->data['id: ' . $id])) {
+            unset($this->data['id: ' . $id]);
+            echo "\"$this->fileName\" data id: $id deleted successfully." . PHP_EOL;
+        } else {
+            echo "\"$this->fileName\" data id: $id is not present." . PHP_EOL;
         }
     }
 }
