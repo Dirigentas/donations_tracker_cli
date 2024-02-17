@@ -10,8 +10,44 @@
 
  namespace Aras\DonationsTrackerCli\db;
  
-final class JsonReader
+class JsonReader
 {   
+    private $data, $filename;
+
+        /**
+     * Read data from a file.
+     * 
+     * @param string $filename The name of the file
+     * @return array The data read from the file
+     */
+    public function __construct(string $filename)
+    {
+        if (!file_exists($filename . '.json')) {
+            $this->data = [];
+        } 
+        else {
+            $handle = fopen($filename . '.json', 'r');
+
+            $jsonData = '';
+            
+            while (!feof($handle)) {
+                $chunk = fread($handle, 8192);
+                $jsonData .= $chunk;
+            }
+            
+            fclose($handle);
+            
+            $jsonArray = json_decode($jsonData, true);
+            
+            if ($jsonArray === null && json_last_error() !== JSON_ERROR_NONE) {
+                echo "Error decoding JSON: " . json_last_error_msg() . PHP_EOL;
+                exit(1);
+            } else {
+                $this->data = $jsonArray;
+            }
+        }
+    }
+
     /**
      * Get the ID for a new record.
      * 
@@ -32,40 +68,7 @@ final class JsonReader
         }
     }
 
-    /**
-     * Read data from a file.
-     * 
-     * @param string $filename The name of the file
-     * @return array The data read from the file
-     */
-    public static function readDataFromFile(string $filename): array
-    {
-        if (!file_exists($filename . '.json')) {
-            $data = [];
-            return $data;
-        } 
-        else {
-            $handle = fopen($filename . '.json', 'r');
 
-            $jsonData = '';
-            
-            while (!feof($handle)) {
-                $chunk = fread($handle, 8192);
-                $jsonData .= $chunk;
-            }
-            
-            fclose($handle);
-            
-            $jsonArray = json_decode($jsonData, true);
-            
-            if ($jsonArray === null && json_last_error() !== JSON_ERROR_NONE) {
-                echo "Error decoding JSON: " . json_last_error_msg() . PHP_EOL;
-                exit(1);
-            } else {
-                return $jsonArray;
-            }
-        }
-    }
 
     /**
      * Write data to a file.

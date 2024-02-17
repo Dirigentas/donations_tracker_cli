@@ -3,13 +3,13 @@ namespace Aras\DonationsTrackerCli\db;
  
 interface DataReaderInterface
 {
-    function create(array $userData) : void;
+    function createData(array $userData) : void;
  
-    function update(int $userId, string $type, array $userData) : void;
+    function updateData(int $userId, string $type, array $userData) : void;
  
-    function delete(int $userId) : void;
+    function deleteData(int $userId) : void;
  
-    function show(int $userId) : array;
+    function showData(int $userId) : array;
     
-    function showAll() : array;
+    function showAllData() : array;
 }
