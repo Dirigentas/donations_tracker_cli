@@ -17,4 +17,4 @@ use Aras\DonationsTrackerCli\App;
 /**
  * Starts the solution.
  */
-App::router($argc, $argv);
+(new App())->router($argc, $argv);

@@ -9,7 +9,7 @@ use Aras\DonationsTrackerCli\Validation;
 
 class CharityController
 {
-    private $fileName = 'charities';
+    public $fileName = 'charities';
     
     /**
      * Create a new charity record.
@@ -83,30 +83,4 @@ class CharityController
     {
         (new JsonReader($this->fileName))->deleteData($id);
     }
-    
-    /**
-     * Write charity data to a CSV file.
-     *
-     * @param string $fileName The name of the file containing the charity data
-     * @return void
-     */
-    public function writeToCsv(): void
-    {
-        $csvFileName = fopen('./public/charities.csv', 'w');
-
-        fputcsv($csvFileName, [
-            "id",
-            "name",
-            "representative_email"
-        ]);
-
-        foreach ((new JsonReader($this->fileName))->showAllData() as $key => $row) {
-            $key = substr($key, 4);
-            array_pop($row);
-            array_unshift($row, $key);
-            fputcsv($csvFileName, $row);
-        }
-        fclose($csvFileName);
-    }
-
 }
