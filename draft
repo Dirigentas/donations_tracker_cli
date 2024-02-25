@@ -1,0 +1,5 @@
+php public/index.php view-charities
+php public/index.php add-charity "Charity Name" "representative@example.com"
+php public/index.php delete-charity <charity_id>
+php public/index.php add-donation "Donor Name" <amount> <charity_id>
+php public/index.php import-charities /path/to/charities.csv

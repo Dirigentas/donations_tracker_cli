@@ -12,9 +12,10 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Aras\DonationsTrackerCli\App;
+use Aras\DonationsTrackerCli\CLIApplication;
 
 /**
  * Starts the solution.
  */
-(new App())->router($argc, $argv);
+$cliApp = new CLIApplication();
+$cliApp->run($argv);
