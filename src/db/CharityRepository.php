@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aras\DonationsTrackerCli;
+namespace Aras\DonationsTrackerCli\db;
 
-// use Aras\DonationsTrackerCli\Controllers\CharityController;
+use Aras\DonationsTrackerCli\Charity;
 
 class CharityRepository {
     private $charities = [];
@@ -12,7 +12,7 @@ class CharityRepository {
 
     public function __construct($filePath)
     {
-        $this->filePath = $filePath;
+        $this->filePath = __DIR__ . "/" . $filePath . '.json';
         
         if (file_exists($this->filePath)) {
             $data = file_get_contents($this->filePath);
@@ -32,8 +32,6 @@ class CharityRepository {
 
     public function getAllCharities()
     {
-        uasort($this->charities, fn ($a, $b) => $a['name'] <=> $b['name']);
-
         return $this->charities;
     }
 
@@ -50,7 +48,7 @@ class CharityRepository {
     public function deleteCharity($id)
     {
         foreach ($this->charities as $key => $charity) {
-            if ($charity->getId() === $id) {
+            if ($charity->getId() == $id) {
                 unset($this->charities[$key]);
                 return true;
             }
@@ -58,7 +56,7 @@ class CharityRepository {
         return false;
     }
 
-    private function __destruct()
+    public function __destruct()
     {
         $charitiesData = [];
         foreach ($this->charities as $charity) {

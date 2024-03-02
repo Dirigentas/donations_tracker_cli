@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Aras\DonationsTrackerCli;
 
 use Aras\DonationsTrackerCli\Charity;
-use Aras\DonationsTrackerCli\CharityRepository;
+use Aras\DonationsTrackerCli\db\CharityRepository;
+use Aras\DonationsTrackerCli\Donation;
+use Aras\DonationsTrackerCli\db\DonationRepository;
 
 class CLIApplication {
     private $charityRepository;
     // private $donationRepository;
 
     public function __construct() {
-        $this->charityRepository = new CharityRepository();
+        $this->charityRepository = new CharityRepository('charities');
         // $this->donationRepository = new DonationRepository();
     }
 
@@ -56,16 +58,17 @@ class CLIApplication {
                     echo "Unknown command: $command\n";
             }
         } else {
-            echo "Usage: php index.php <command>\n";
+            echo "\nphp public/index.php view-charities" . PHP_EOL .
+            "php public/index.php add-charity 'Charity Name' 'email@example.com'" . PHP_EOL .
+            "php public/index.php delete-charity 'charity_id'" . PHP_EOL .
+            "php public/index.php add-donation 'Donor Name' 'amount' 'charity_id'" . PHP_EOL .
+            "php public/index.php import-charities /path/to/charities.csv" . PHP_EOL;
         }
     }
 
     private function viewCharities() {
         $charities = $this->charityRepository->getAllCharities();
-        echo "LABAS \n";
         print_r($charities);
-        echo "\n LABAS \n";
-        die;
         foreach ($charities as $charity) {
             echo "ID: {$charity->getId()}, Name: {$charity->getName()}, Email: {$charity->getRepresentativeEmail()}\n";
         }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aras\DonationsTrackerCli;
+namespace Aras\DonationsTrackerCli\db;
 
 use Aras\DonationsTrackerCli\Controllers\CharityController;
 
