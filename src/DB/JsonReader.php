@@ -14,7 +14,8 @@
  
 class JsonReader implements DataReaderInterface
 {   
-    private $fileName, $data;
+    private $data = [];
+    private $fileName;
 
     /**
      * Read data from a file.
@@ -26,10 +27,7 @@ class JsonReader implements DataReaderInterface
     {
         $this->fileName = $fileName;
 
-        if (!file_exists(__DIR__ . "/" . $this->fileName . '.json')) {
-            $this->data = [];
-        } 
-        else {
+        if (file_exists(__DIR__ . "/" . $this->fileName . '.json')) {
             $handle = fopen(__DIR__ . "/" . $this->fileName . '.json', 'r');
 
             $jsonData = '';
