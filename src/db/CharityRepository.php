@@ -6,7 +6,8 @@ namespace Aras\DonationsTrackerCli\db;
 
 use Aras\DonationsTrackerCli\Charity;
 
-class CharityRepository {
+class CharityRepository
+{
     private $charities = [];
     private $filePath;
 
@@ -35,17 +36,19 @@ class CharityRepository {
         return $this->charities;
     }
 
-    public function getCharityById($id)
+    public function updateCharity($id, $name, $email)
     {
-        foreach ($this->charities as $charity) {
-            if ($charity->getId() === $id) {
-                return $charity;
+        foreach ($this->charities as $key => $charity) {
+            if ($charity->getId() == $id) {
+                $charity->setName($name);
+                $charity->setRepresentativeEmail($email);
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
-    public function deleteCharity($id)
+    public function deleteCharity($id): bool
     {
         foreach ($this->charities as $key => $charity) {
             if ($charity->getId() == $id) {

@@ -26,7 +26,6 @@ log donations to specific charities.
 - Do not use any frameworks or packages. 
 - Do validation (valid email, donation, etc.) 
 - Write code using the best OOP practices. 
-- Add the ability to import charities in CSV format.  
 - Push your code to a Git repository  (e.g.,  GitHub, GitLab, Bitbucket) and share 
 the link with us.  
  

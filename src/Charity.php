@@ -11,21 +11,35 @@ class Charity {
     private $name;
     private $representativeEmail;
 
-    public function __construct($id, $name, $representativeEmail) {
+    public function __construct($id, $name, $representativeEmail)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->representativeEmail = $representativeEmail;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getRepresentativeEmail() {
+    public function getRepresentativeEmail()
+    {
         return $this->representativeEmail;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setRepresentativeEmail(string $email): void
+    {
+        $this->representativeEmail = $email;
     }
 }

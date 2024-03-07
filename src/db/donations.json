@@ -1,0 +1,23 @@
+[
+    {
+        "id": 3,
+        "donorName": "Dalia",
+        "amount": "3000",
+        "charityId": "3",
+        "dateTime": "2024-03-02 12:57:15"
+    },
+    {
+        "id": 2,
+        "donorName": "Jolanta",
+        "amount": "4000",
+        "charityId": "3",
+        "dateTime": "2024-03-02 12:57:15"
+    },
+    {
+        "id": 3,
+        "donorName": "Gytautas",
+        "amount": "5000",
+        "charityId": "4",
+        "dateTime": "2024-03-02 12:57:15"
+    }
+]

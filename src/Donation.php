@@ -13,12 +13,12 @@ class Donation {
     private $charityId;
     private $dateTime;
 
-    public function __construct($id, $donorName, $amount, $charityId, $dateTime) {
+    public function __construct($id, $donorName, $amount, $charityId) {
         $this->id = $id;
         $this->donorName = $donorName;
         $this->amount = $amount;
         $this->charityId = $charityId;
-        $this->dateTime = $dateTime;
+        $this->dateTime = date("Y-m-d H:i:s");
     }
 
     public function getId() {
